@@ -1,0 +1,6 @@
+{
+  "mongoURI": "mongodb://localhost:27017/db",
+  "jwtSecret": "$(JWT_TOKEN)",
+  "githubClientId": "${GITHUB_CLIENT_ID}",
+  "githubClientSecret": "${GITHUB_CLIENT_SECRET}"
+}
