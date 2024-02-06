@@ -1,5 +1,5 @@
 const express = require('express');
-const request = require('request');
+const axios = require('axios');
 const config = require('config');
 const { check, validationResult } = require('express-validator');
 const router = express.Router();
@@ -339,15 +339,11 @@ router.get('/github/:username', (req, res) => {
       headers: { 'user-agent': 'node.js' },
     };
 
-    request(options, (err, response, body) => {
-      if (err) console.error(err);
-
-      if (response.statusCode !== 200) {
+    const response = axios.get(options);
+    if (response.statusCode !== 200) {
         return res.status(404).json({ msg: 'No GitHub profile found.' });
-      }
-
-      res.json(JSON.parse(body));
-    });
+    }
+    res.json(JSON.parse(response.body));
   } catch (err) {
     console.error(err.message);
     res.status(500).send('Server Error');

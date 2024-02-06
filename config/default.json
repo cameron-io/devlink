@@ -1,5 +1,5 @@
 {
-  "mongoURI": "${DATABASE_URL}",
+  "mongoURI": "mongodb://localhost:27017/linkdev",
   "jwtSecret": "$(JWT_TOKEN)",
   "githubClientId": "${GITHUB_CLIENT_ID}",
   "githubClientSecret": "${GITHUB_CLIENT_SECRET}"
