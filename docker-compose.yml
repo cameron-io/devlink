@@ -1,0 +1,32 @@
+
+volumes:
+  db-data:
+
+services:
+
+  webapp:
+    container_name: ${SERVER_NAME}
+    image: ${SERVER_NAME}:latest
+    depends_on:
+      - db
+    restart: always
+    ports:
+     - "${SERVER_PORT}:${SERVER_PORT}"
+
+  db:
+    container_name: mongodb
+    image: mongodb/mongodb-community-server:latest
+    restart: always
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${DATABASE_USER}
+      MONGO_INITDB_ROOT_PASSWORD: ${DATABASE_PASS}
+      POSTGRES_DB: ${DATABASE_NAME}
+    volumes:
+      - db-data:/var/lib/mongodb/data
+    healthcheck:
+        test: ["CMD-SHELL", "mongo admin -u ${DATABASE_NAME} -p ${DATABASE_USER}"]
+        interval: 30s
+        timeout: 5s
+        retries: 5
+    ports:
+      - "${DATABASE_PORT}:${DATABASE_PORT}"
