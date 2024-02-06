@@ -20,11 +20,10 @@ services:
     environment:
       MONGO_INITDB_ROOT_USERNAME: ${DATABASE_USER}
       MONGO_INITDB_ROOT_PASSWORD: ${DATABASE_PASS}
-      POSTGRES_DB: ${DATABASE_NAME}
     volumes:
       - db-data:/var/lib/mongodb/data
     healthcheck:
-        test: ["CMD-SHELL", "mongo admin -u ${DATABASE_NAME} -p ${DATABASE_USER}"]
+        test: "echo 'db.runCommand(\"ping\").ok' | mongosh ${DATABASE_HOST}:${DATABASE_PORT}/test --quiet"
         interval: 30s
         timeout: 5s
         retries: 5
