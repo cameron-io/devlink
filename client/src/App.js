@@ -45,38 +45,22 @@ const App = () => {
         <Fragment>
           {/* Navigation */}
           <Navbar />
-          {/* Entry route */}
-          <Route exact path='/' component={Landing} />
           {/* Wrap in container for padding */}
           <section className='container'>
             <Alert />
             {/* Wrap other routes in a Switch */}
             <Routes>
-              <Route exact path='/register' component={Register} />
-              <Route exact path='/login' component={Login} />
-              <Route exact path='/profile/:id' component={Profile} />
-              <Route exact path='/profiles' component={Profiles} />
-              <PrivateRoute exact path='/dashboard' component={Dashboard} />
-              <PrivateRoute
-                exact
-                path='/create-profile'
-                component={CreateProfile}
-              />
-              <PrivateRoute
-                exact
-                path='/edit-profile'
-                component={EditProfile}
-              />
-              <PrivateRoute
-                exact
-                path='/add-experience'
-                component={AddExperience}
-              />
-              <PrivateRoute
-                exact
-                path='/add-education'
-                component={AddEducation}
-              />
+              {/* Entry route */}
+              <Route path='/' element={<Landing/>} />
+              <Route path='/register' element={<Register/>} />
+              <Route path='/login' element={<Login/>} />
+              <Route path='/profile/:id' element={<Profile/>} />
+              <Route path='/profiles' element={<Profiles/>} />
+              <Route path='/dashboard' element={<PrivateRoute component={Dashboard} />} />
+              <Route path='/create-profile' element={<PrivateRoute component={CreateProfile}/>} />
+              <Route path='/edit-profile' element={<PrivateRoute component={EditProfile}/>} />
+              <Route path='/add-experience' element={<PrivateRoute component={AddExperience}/>} />
+              <Route path='/add-education' element={<PrivateRoute component={AddEducation}/>} />
             </Routes>
           </section>
         </Fragment>
