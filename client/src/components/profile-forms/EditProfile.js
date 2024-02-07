@@ -1,5 +1,5 @@
 import React, { Fragment, useState, useEffect } from 'react';
-import { Link, withRouter } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { createProfile, getCurrentProfile } from '../../actions/profile';
@@ -272,7 +272,13 @@ const mapStateToProps = (state) => ({
   profile: state.profile,
 });
 
+// Wrapping the main fun with this functional component
+function EditProfileWrapper(props) {
+    let navigate = useNavigate();
+    return <EditProfile {...props} navigate={navigate} />
+}
+
 // withRouter allows for history object to be accessed from action
 export default connect(mapStateToProps, { createProfile, getCurrentProfile })(
-  withRouter(EditProfile)
+    EditProfileWrapper
 );

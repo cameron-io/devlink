@@ -3,7 +3,7 @@ import { SET_ALERT, REMOVE_ALERT } from '../actions/types';
 const initialState = [];
 
 // state set as initialState
-export default function (state = initialState, action) {
+const alert = (state = initialState, action) => {
   // Pull from action
   const { type, payload } = action;
 
@@ -21,3 +21,5 @@ export default function (state = initialState, action) {
       return state;
   }
 }
+
+export default alert;

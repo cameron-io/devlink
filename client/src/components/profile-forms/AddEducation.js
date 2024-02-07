@@ -1,5 +1,5 @@
 import React, { Fragment, useState } from 'react';
-import { Link, withRouter } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { addEducation } from '../../actions/profile';
@@ -134,4 +134,10 @@ AddEducation.propTypes = {
   addEducation: PropTypes.func.isRequired,
 };
 
-export default connect(null, { addEducation })(withRouter(AddEducation));
+// Wrapping the main fun with this functional component
+function AddEducationWrapper(props) {
+    let navigate = useNavigate();
+    return <AddEducation {...props} navigate={navigate} />
+}
+
+export default connect(null, { addEducation })(AddEducationWrapper);

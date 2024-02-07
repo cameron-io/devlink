@@ -1,5 +1,5 @@
 import React, { Fragment, useState } from 'react';
-import { Link, withRouter } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { addExperience } from '../../actions/profile';
@@ -126,4 +126,10 @@ AddExperience.propTypes = {
   addExperience: PropTypes.func.isRequired,
 };
 
-export default connect(null, { addExperience })(withRouter(AddExperience));
+// Wrapping the main fun with this functional component
+function AddExperienceWrapper(props) {
+    let navigate = useNavigate();
+    return <AddExperience {...props} navigate={navigate} />
+}
+
+export default connect(null, { addExperience })(AddExperienceWrapper);

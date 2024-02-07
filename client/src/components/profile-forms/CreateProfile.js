@@ -1,5 +1,5 @@
 import React, { Fragment, useState } from 'react';
-import { Link, withRouter } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { createProfile } from '../../actions/profile';
@@ -225,5 +225,11 @@ CreateProfile.propTypes = {
   createProfile: PropTypes.func.isRequired,
 };
 
+// Wrapping the main fun with this functional component
+function CreateProfileWrapper(props) {
+    let navigate = useNavigate();
+    return <CreateProfile {...props} navigate={navigate} />
+}
+
 // withRouter allows for history object to be accessed from action
-export default connect(null, { createProfile })(withRouter(CreateProfile));
+export default connect(null, { createProfile })(CreateProfileWrapper);

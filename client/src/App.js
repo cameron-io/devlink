@@ -1,6 +1,6 @@
 // React
 import React, { Fragment, useEffect } from 'react';
-import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 // Redux
 import { Provider } from 'react-redux';
 import store from './store';
@@ -51,7 +51,7 @@ const App = () => {
           <section className='container'>
             <Alert />
             {/* Wrap other routes in a Switch */}
-            <Switch>
+            <Routes>
               <Route exact path='/register' component={Register} />
               <Route exact path='/login' component={Login} />
               <Route exact path='/profile/:id' component={Profile} />
@@ -77,7 +77,7 @@ const App = () => {
                 path='/add-education'
                 component={AddEducation}
               />
-            </Switch>
+            </Routes>
           </section>
         </Fragment>
       </Router>
