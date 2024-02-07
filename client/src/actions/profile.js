@@ -101,19 +101,18 @@ export const createProfile = (formData, navigate, edit = false) => async (
       headers: { 'Content-Type': 'application/json' },
     };
 
-    axios.post('/api/profile', formData, config).then((res) => {
-        dispatch({
-            type: GET_PROFILE,
-            payload: res.data,
-        });
-    
-        dispatch(setAlert(edit ? 'Profile Updated' : 'Profile Created', 'success'));
-    
-        if (!edit) {
-            // Must use push method in action, not redirect
-            navigate('/dashboard');
-        }
-      });
+    const res = axios.post('/api/profile', formData, config);
+    dispatch({
+        type: GET_PROFILE,
+        payload: res.data,
+    });
+
+    dispatch(setAlert(edit ? 'Profile Updated' : 'Profile Created', 'success'));
+
+    if (!edit) {
+        // Must use push method in action, not redirect
+        navigate('/dashboard');
+    };
 
   } catch (err) {
     const errors = err.response.data.errors;
