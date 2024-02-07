@@ -7,9 +7,9 @@ import { createProfile, getCurrentProfile } from '../../actions/profile';
 const EditProfile = ({
   profile: { profile, loading },
   createProfile,
-  getCurrentProfile,
-  history,
+  getCurrentProfile
 }) => {
+  let navigate = useNavigate();
   const [formData, setFormData] = useState({
     company: '',
     website: '',
@@ -83,8 +83,8 @@ const EditProfile = ({
 
   const onSubmit = (e) => {
     e.preventDefault();
-    // call action, access props.history (deconstructed in ctor)
-    createProfile(formData, history, true);
+    // call action
+    createProfile(formData, navigate, true);
   };
 
   return (
@@ -272,13 +272,4 @@ const mapStateToProps = (state) => ({
   profile: state.profile,
 });
 
-// Wrapping the main fun with this functional component
-function EditProfileWrapper(props) {
-    let navigate = useNavigate();
-    return <EditProfile {...props} navigate={navigate} />
-}
-
-// withRouter allows for history object to be accessed from action
-export default connect(mapStateToProps, { createProfile, getCurrentProfile })(
-    EditProfileWrapper
-);
+export default connect(mapStateToProps, { createProfile, getCurrentProfile })(EditProfile);

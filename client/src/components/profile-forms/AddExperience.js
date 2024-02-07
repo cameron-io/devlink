@@ -4,7 +4,8 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { addExperience } from '../../actions/profile';
 
-const AddExperience = ({ addExperience, history }) => {
+const AddExperience = ({ addExperience }) => {
+  let navigate = useNavigate();
   const [formData, setFormData] = useState({
     company: '',
     title: '',
@@ -37,7 +38,7 @@ const AddExperience = ({ addExperience, history }) => {
         className='form'
         onSubmit={(e) => {
           e.preventDefault();
-          addExperience(formData, history);
+          addExperience(formData, navigate);
         }}
       >
         <div className='form-group'>
@@ -126,10 +127,4 @@ AddExperience.propTypes = {
   addExperience: PropTypes.func.isRequired,
 };
 
-// Wrapping the main fun with this functional component
-function AddExperienceWrapper(props) {
-    let navigate = useNavigate();
-    return <AddExperience {...props} navigate={navigate} />
-}
-
-export default connect(null, { addExperience })(AddExperienceWrapper);
+export default connect(null, { addExperience })(AddExperience);

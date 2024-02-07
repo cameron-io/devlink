@@ -4,7 +4,8 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { addEducation } from '../../actions/profile';
 
-const AddEducation = ({ addEducation, history }) => {
+const AddEducation = ({ addEducation }) => {
+  let navigate = useNavigate();
   const [formData, setFormData] = useState({
     school: '',
     degree: '',
@@ -45,7 +46,7 @@ const AddEducation = ({ addEducation, history }) => {
         className='form'
         onSubmit={(e) => {
           e.preventDefault();
-          addEducation(formData, history);
+          addEducation(formData, navigate);
         }}
       >
         <div className='form-group'>
@@ -134,10 +135,4 @@ AddEducation.propTypes = {
   addEducation: PropTypes.func.isRequired,
 };
 
-// Wrapping the main fun with this functional component
-function AddEducationWrapper(props) {
-    let navigate = useNavigate();
-    return <AddEducation {...props} navigate={navigate} />
-}
-
-export default connect(null, { addEducation })(AddEducationWrapper);
+export default connect(null, { addEducation })(AddEducation);

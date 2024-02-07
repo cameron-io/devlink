@@ -4,7 +4,8 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { createProfile } from '../../actions/profile';
 
-const CreateProfile = ({ createProfile, history }) => {
+const CreateProfile = ({ createProfile }) => {
+  let navigate = useNavigate();
   const [formData, setFormData] = useState({
     company: '',
     website: '',
@@ -42,8 +43,8 @@ const CreateProfile = ({ createProfile, history }) => {
 
   const onSubmit = (e) => {
     e.preventDefault();
-    // call action, access props.history (deconstructed in ctor)
-    createProfile(formData, history);
+    // call action
+    createProfile(formData, navigate);
   };
 
   return (
@@ -225,11 +226,4 @@ CreateProfile.propTypes = {
   createProfile: PropTypes.func.isRequired,
 };
 
-// Wrapping the main fun with this functional component
-function CreateProfileWrapper(props) {
-    let navigate = useNavigate();
-    return <CreateProfile {...props} navigate={navigate} />
-}
-
-// withRouter allows for history object to be accessed from action
-export default connect(null, { createProfile })(CreateProfileWrapper);
+export default connect(null, { createProfile })(CreateProfile);

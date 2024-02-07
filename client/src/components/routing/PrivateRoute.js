@@ -6,22 +6,15 @@ import { connect } from 'react-redux';
 const PrivateRoute = ({
   component: Component,
   auth: { isAuthenticated, loading },
-  ...rest
+  ...props
 }) => (
-  <Route
-    // Exact path variable
-    {...rest}
-    render={(props) =>
-      // If not authenticated
-      !isAuthenticated && !loading ? (
+    !isAuthenticated && !loading ? (
         // Back to login page
         <Navigate to='/login' />
       ) : (
         // Else display component
         <Component {...props} />
       )
-    }
-  />
 );
 
 PrivateRoute.propTypes = {
