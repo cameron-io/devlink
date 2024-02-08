@@ -7,6 +7,7 @@ import store from './store';
 // Main page
 import Navbar from './components/layout/Navbar';
 import Landing from './components/layout/Landing';
+import Footer from './components/layout/Footer';
 // Auth Page
 import Register from './components/auth/Register';
 import Login from './components/auth/Login';
@@ -63,6 +64,7 @@ const App = () => {
               <Route path='/add-education' element={<PrivateRoute component={AddEducation}/>} />
             </Routes>
           </section>
+          <Footer></Footer>
         </Fragment>
       </Router>
     </Provider>
