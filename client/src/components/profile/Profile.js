@@ -1,6 +1,6 @@
 import React, { Fragment, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import { Link } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import { connect } from 'react-redux';
 import Spinner from '../layout/Spinner';
 import { getProfileById } from '../../actions/profile';
@@ -11,12 +11,12 @@ import ProfileExperience from './ProfileExperience';
 const Profile = ({
   getProfileById,
   profile: { profile, loading },
-  auth,
-  match,
+  auth
 }) => {
+  const { id } = useParams();
   useEffect(() => {
-    getProfileById(match.params.id);
-  }, [getProfileById, match.params.id]);
+    getProfileById(id);
+  }, [getProfileById, id]);
 
   return (
     <Fragment>
