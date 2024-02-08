@@ -3,10 +3,10 @@
   "version": "1.0.0",
   "private": true,
   "description": "Developer Network",
-  "main": "server.js",
+  "main": "server/app.js",
   "scripts": {
-    "start": "node server",
-    "server": "nodemon server",
+    "start": "node server/app",
+    "server": "nodemon server/app",
     "client": "npm start --prefix client",
     "dev": "concurrently \"npm run client\" \"npm run server\""
   },
