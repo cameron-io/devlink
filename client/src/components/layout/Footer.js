@@ -6,9 +6,9 @@ const Footer = () => {
         <div style={{margin: 'auto', maxWidth: '500px', textAlign: 'center', padding: '3rem 0rem'}}>
             <div style={{fontWeight: 'bold'}}>Connect to us: </div>
             <ul>
-                <li><a href="#"><i class="fa-brands fa-facebook"></i></a> Facebook</li>
-                <li><a href="#"><i class="fa-brands fa-x-twitter"></i></a> X/Twitter</li>
-                <li><a href="#"><i class="fa-brands fa-instagram"></i></a> Instagram</li>
+                <li><a href='#'><i class='fa-brands fa-facebook'></i></a> Facebook</li>
+                <li><a href='#'><i class='fa-brands fa-x-twitter'></i></a> X/Twitter</li>
+                <li><a href='#'><i class='fa-brands fa-instagram'></i></a> Instagram</li>
             </ul>
         </div>
         <div style={{textAlign: 'center', padding: '1rem 0rem', backgroundColor: '#343a40'}}>
