@@ -19,10 +19,13 @@ services:
     restart: always
     command: [--auth]
     environment:
-      MONGO_INITDB_ROOT_USERNAME: ${DATABASE_ROOT_USER}
-      MONGO_INITDB_ROOT_PASSWORD: ${DATABASE_ROOT_PASS}
+      MONGODB_INITDB_ROOT_USERNAME: ${DATABASE_ROOT_USER}
+      MONGODB_INITDB_ROOT_PASSWORD: ${DATABASE_ROOT_PASS}
+      DATABASE_USER: ${DATABASE_USER}
+      DATABASE_PASS: ${DATABASE_PASS}
     volumes:
-      - db-data:/data/db
+      - ./db-data:/data/db
+      - ./db-init.js:/docker-entrypoint-initdb.d/mongo-init.js
     healthcheck:
         test: "echo 'db.runCommand(\"ping\").ok' | mongosh ${DATABASE_HOST}:${DATABASE_PORT}/test --quiet"
         interval: 30s
