@@ -24,7 +24,7 @@ services:
       DATABASE_USER: ${DATABASE_USER}
       DATABASE_PASS: ${DATABASE_PASS}
     volumes:
-      - ./db-data:/data/db
+      - db-data:/data/db
       - ./db-init.js:/docker-entrypoint-initdb.d/mongo-init.js
     healthcheck:
         test: "echo 'db.runCommand(\"ping\").ok' | mongosh ${DATABASE_HOST}:${DATABASE_PORT}/test --quiet"
