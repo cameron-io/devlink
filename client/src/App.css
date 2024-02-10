@@ -44,6 +44,16 @@ img {
   margin-bottom: 3rem;
 }
 
+.container:has(.landing) {
+    max-width: unset;
+    margin: auto;
+    overflow: hidden;
+    height: 100svh;
+    padding: 0 0rem;
+    margin-top: 0rem;
+    margin-bottom: 0rem;
+}
+
 /* Text Styles*/
 .x-large {
   font-size: 4rem;
