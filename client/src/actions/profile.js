@@ -109,10 +109,7 @@ export const createProfile = (formData, navigate, edit = false) => async (
 
     dispatch(setAlert(edit ? 'Profile Updated' : 'Profile Created', 'success'));
 
-    if (!edit) {
-        // Must use push method in action, not redirect
-        navigate('/dashboard');
-    };
+    navigate('/dashboard');
 
   } catch (err) {
     const errors = err.response.data.errors;
