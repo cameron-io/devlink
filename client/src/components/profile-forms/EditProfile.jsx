@@ -28,22 +28,19 @@ const EditProfile = ({
   const [displaySocialInputs, toggleSocialInputs] = useState(false);
 
   useEffect(() => {
-    getCurrentProfile();
-
     setFormData({
-      company: loading || !profile.company ? '' : profile.company,
-      website: loading || !profile.website ? '' : profile.website,
-      location: loading || !profile.location ? '' : profile.location,
-      status: loading || !profile.status ? '' : profile.status,
-      skills: loading || !profile.skills ? '' : profile.company,
-      githubusername:
-        loading || !profile.githubusername ? '' : profile.githubusername,
-      bio: loading || !profile.bio ? '' : profile.bio,
-      twitter: loading || !profile.social ? '' : profile.twitter,
-      facebook: loading || !profile.social ? '' : profile.facebook,
-      linkedin: loading || !profile.social ? '' : profile.linkedin,
-      youtube: loading || !profile.social ? '' : profile.youtube,
-      instagram: loading || !profile.social ? '' : profile.instagram,
+      company:        loading || !profile.company        ? '' : profile.company,
+      website:        loading || !profile.website        ? '' : profile.website,
+      location:       loading || !profile.location       ? '' : profile.location,
+      status:         loading || !profile.status         ? '' : profile.status,
+      skills:         loading || !profile.skills         ? '' : profile.company,
+      githubusername: loading || !profile.githubusername ? '' : profile.githubusername,
+      bio:            loading || !profile.bio            ? '' : profile.bio,
+      twitter:        loading || !profile.social         ? '' : profile.twitter,
+      facebook:       loading || !profile.social         ? '' : profile.facebook,
+      linkedin:       loading || !profile.social         ? '' : profile.linkedin,
+      youtube:        loading || !profile.social         ? '' : profile.youtube,
+      instagram:      loading || !profile.social         ? '' : profile.instagram,
     });
   }, [
     loading,
@@ -97,7 +94,7 @@ const EditProfile = ({
       <small>* = required field</small>
       <form className='form' onSubmit={(e) => onSubmit(e)}>
         <div className='form-group'>
-          <select name='status' value={status} onChange={(e) => onChange(e)}>
+          <select name='status' defaultValue={status} onChange={(e) => onChange(e)}>
             <option value='0'>* Select Professional Status</option>
             <option value='Developer'>Developer</option>
             <option value='Junior Developer'>Junior Developer</option>
@@ -117,7 +114,7 @@ const EditProfile = ({
             type='text'
             placeholder='Company'
             name='company'
-            value={company}
+            defaultValue={company}
             onChange={(e) => onChange(e)}
           />
           <small className='form-text'>
@@ -129,7 +126,7 @@ const EditProfile = ({
             type='text'
             placeholder='Website'
             name='website'
-            value={website}
+            defaultValue={website}
             onChange={(e) => onChange(e)}
           />
           <small className='form-text'>
@@ -141,7 +138,7 @@ const EditProfile = ({
             type='text'
             placeholder='Location'
             name='location'
-            value={location}
+            defaultValue={location}
             onChange={(e) => onChange(e)}
           />
           <small className='form-text'>
@@ -153,7 +150,7 @@ const EditProfile = ({
             type='text'
             placeholder='* Skills'
             name='skills'
-            value={skills}
+            defaultValue={skills}
             onChange={(e) => onChange(e)}
           />
           <small className='form-text'>
@@ -165,7 +162,7 @@ const EditProfile = ({
             type='text'
             placeholder='Github Username'
             name='githubusername'
-            value={githubusername}
+            defaultValue={githubusername}
             onChange={(e) => onChange(e)}
           />
           <small className='form-text'>
@@ -177,7 +174,7 @@ const EditProfile = ({
           <textarea
             placeholder='A short bio of yourself'
             name='bio'
-            value={bio}
+            defaultValue={bio}
             onChange={(e) => onChange(e)}
           ></textarea>
           <small className='form-text'>Tell us a little about yourself</small>
@@ -202,7 +199,7 @@ const EditProfile = ({
                 type='text'
                 placeholder='Twitter URL'
                 name='twitter'
-                value={twitter}
+                defaultValue={twitter}
                 onChange={(e) => onChange(e)}
               />
             </div>
@@ -213,7 +210,7 @@ const EditProfile = ({
                 type='text'
                 placeholder='Facebook URL'
                 name='facebook'
-                value={facebook}
+                defaultValue={facebook}
                 onChange={(e) => onChange(e)}
               />
             </div>
@@ -224,7 +221,7 @@ const EditProfile = ({
                 type='text'
                 placeholder='YouTube URL'
                 name='youtube'
-                value={youtube}
+                defaultValue={youtube}
                 onChange={(e) => onChange(e)}
               />
             </div>
@@ -235,7 +232,7 @@ const EditProfile = ({
                 type='text'
                 placeholder='Linkedin URL'
                 name='linkedin'
-                value={linkedin}
+                defaultValue={linkedin}
                 onChange={(e) => onChange(e)}
               />
             </div>
@@ -246,7 +243,7 @@ const EditProfile = ({
                 type='text'
                 placeholder='Instagram URL'
                 name='instagram'
-                value={instagram}
+                defaultValue={instagram}
                 onChange={(e) => onChange(e)}
               />
             </div>
