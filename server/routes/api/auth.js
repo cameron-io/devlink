@@ -43,7 +43,7 @@ router.post(
       // See if no user exists
       if (!user) {
         return res
-          .status(400)
+          .status(401)
           .json({ error: [{ msg: 'Invalid Credentials' }] });
       }
 
@@ -51,7 +51,7 @@ router.post(
 
       if (!isMatch) {
         return res
-          .status(400)
+          .status(401)
           .json({ error: [{ msg: 'Invalid Credentials' }] });
       }
 
