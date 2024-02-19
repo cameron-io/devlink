@@ -11,7 +11,7 @@ import {
 import { cookies } from '../actions/auth';
 
 const initialState = {
-  token: cookies.get('token'),
+  token: cookies.get('access_token'),
   isAuthenticated: null,
   loading: true,
   user: null,
@@ -31,7 +31,7 @@ const auth = (state = initialState, action) => {
     case REGISTER_SUCCESS:
     case LOGIN_SUCCESS:
       // Set the access token as an HTTP-only cookie
-      cookies.set('token', payload.token, {
+      cookies.set('access_token', payload.token, {
         path: '/',
         httpOnly: true,
         secure: false // Set to true if using HTTPS
@@ -47,7 +47,7 @@ const auth = (state = initialState, action) => {
     case LOGIN_FAIL:
     case LOGOUT:
     case ACCOUNT_DELETED:
-      cookies.remove('token');
+      cookies.remove('access_token');
       return {
         ...state,
         token: null,

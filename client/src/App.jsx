@@ -29,8 +29,8 @@ import PrivateRoute from './components/routing/PrivateRoute';
 // Style
 import './App.css';
 
-if (cookies.get('token')) {
-  setAuthToken(cookies.get('token'));
+if (cookies.get('access_token')) {
+  setAuthToken(cookies.get('access_token'));
 }
 
 const App = () => {

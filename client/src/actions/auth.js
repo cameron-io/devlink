@@ -17,8 +17,8 @@ export const cookies = new Cookies();
 
 // Load user
 export const loadUser = () => async (dispatch) => {
-  if (cookies.get('token')) {
-    setAuthToken(cookies.get('token'));
+  if (cookies.get('access_token')) {
+    setAuthToken(cookies.get('access_token'));
   }
 
   try {
