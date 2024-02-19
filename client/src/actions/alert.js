@@ -1,6 +1,6 @@
 // Universal random id
 import { v4 as uuid } from 'uuid';
-import { SET_ALERT, REMOVE_ALERT } from './types';
+import { SET_ALERT, REMOVE_ALERT } from './include/types';
 
 // Send the msg and alertType to state with generated id
 export const setAlert = (msg, alertType, timeout = 5000) => (dispatch) => {

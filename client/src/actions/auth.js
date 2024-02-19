@@ -9,13 +9,16 @@ import {
   LOGIN_FAIL,
   LOGOUT,
   CLEAR_PROFILE,
-} from './types';
+} from './include/types';
 import setAuthToken from '../utils/setAuthToken';
+import Cookies from 'universal-cookie';
+
+export const cookies = new Cookies();
 
 // Load user
 export const loadUser = () => async (dispatch) => {
-  if (localStorage.token) {
-    setAuthToken(localStorage.token);
+  if (cookies.get('token')) {
+    setAuthToken(cookies.get('token'));
   }
 
   try {

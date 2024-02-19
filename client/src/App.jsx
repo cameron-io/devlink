@@ -24,13 +24,13 @@ import Profiles from './components/profiles/Profiles';
 import Alert from './components/layout/Alert';
 // Auth
 import setAuthToken from './utils/setAuthToken';
-import { loadUser } from './actions/auth';
+import { loadUser, cookies } from './actions/auth';
 import PrivateRoute from './components/routing/PrivateRoute';
 // Style
 import './App.css';
 
-if (localStorage.token) {
-  setAuthToken(localStorage.token);
+if (cookies.get('token')) {
+  setAuthToken(cookies.get('token'));
 }
 
 const App = () => {

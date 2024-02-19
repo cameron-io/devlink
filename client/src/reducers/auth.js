@@ -7,10 +7,11 @@ import {
   LOGIN_FAIL,
   LOGOUT,
   ACCOUNT_DELETED,
-} from '../actions/types';
+} from '../actions/include/types';
+import { cookies } from '../actions/auth';
 
 const initialState = {
-  token: localStorage.getItem('token'),
+  token: cookies.get('token'),
   isAuthenticated: null,
   loading: true,
   user: null,
@@ -29,7 +30,12 @@ const auth = (state = initialState, action) => {
       };
     case REGISTER_SUCCESS:
     case LOGIN_SUCCESS:
-      localStorage.setItem('token', payload.token);
+      // Set the access token as an HTTP-only cookie
+      cookies.set('token', payload.token, {
+        path: '/',
+        httpOnly: true,
+        secure: false // Set to true if using HTTPS
+      });
       return {
         ...state,
         ...payload,
@@ -41,7 +47,7 @@ const auth = (state = initialState, action) => {
     case LOGIN_FAIL:
     case LOGOUT:
     case ACCOUNT_DELETED:
-      localStorage.removeItem('token');
+      cookies.remove('token');
       return {
         ...state,
         token: null,
