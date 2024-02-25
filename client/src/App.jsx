@@ -23,15 +23,10 @@ import Profiles from './components/profiles/Profiles';
 // Alerts
 import Alert from './components/layout/Alert';
 // Auth
-import setAuthToken from './utils/setAuthToken';
-import { loadUser, cookies } from './actions/auth';
+import { loadUser } from './actions/auth';
 import PrivateRoute from './components/routing/PrivateRoute';
 // Style
 import './App.css';
-
-if (cookies.get('access_token')) {
-  setAuthToken(cookies.get('access_token'));
-}
 
 const App = () => {
   useEffect(() => {

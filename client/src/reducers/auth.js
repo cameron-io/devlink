@@ -6,12 +6,11 @@ import {
   LOGIN_SUCCESS,
   LOGIN_FAIL,
   LOGOUT,
+  LOGOUT_FAIL,
   ACCOUNT_DELETED,
 } from '../actions/include/types';
-import { cookies } from '../actions/auth';
 
 const initialState = {
-  token: cookies.get('access_token'),
   isAuthenticated: null,
   loading: true,
   user: null,
@@ -30,12 +29,6 @@ const auth = (state = initialState, action) => {
       };
     case REGISTER_SUCCESS:
     case LOGIN_SUCCESS:
-      // Set the access token as an HTTP-only cookie
-      cookies.set('access_token', payload.token, {
-        path: '/',
-        httpOnly: true,
-        secure: false // Set to true if using HTTPS
-      });
       return {
         ...state,
         ...payload,
@@ -47,13 +40,12 @@ const auth = (state = initialState, action) => {
     case LOGIN_FAIL:
     case LOGOUT:
     case ACCOUNT_DELETED:
-      cookies.remove('access_token');
       return {
         ...state,
-        token: null,
         isAuthenticated: false,
         loading: false,
       };
+    case LOGOUT_FAIL:
     default:
       return state;
   }

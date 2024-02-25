@@ -8,21 +8,14 @@ import {
   LOGIN_SUCCESS,
   LOGIN_FAIL,
   LOGOUT,
+  LOGOUT_FAIL,
   CLEAR_PROFILE,
 } from './include/types';
-import setAuthToken from '../utils/setAuthToken';
-import Cookies from 'universal-cookie';
-
-export const cookies = new Cookies();
 
 // Load user
 export const loadUser = () => async (dispatch) => {
-  if (cookies.get('access_token')) {
-    setAuthToken(cookies.get('access_token'));
-  }
-
   try {
-    const res = await axios.get('/api/auth');
+    const res = await axios.get('/api/auth', {withCredentials: true});
 
     dispatch({
       type: USER_LOADED,
@@ -90,7 +83,15 @@ export const login = (email, password) => async (dispatch) => {
 };
 
 // Logout / Clear Profile
-export const logout = () => (dispatch) => {
-  dispatch({ type: CLEAR_PROFILE });
-  dispatch({ type: LOGOUT });
+export const logout = () => async (dispatch) => {
+    try {
+        const res = await axios.post('/api/auth/logout', {withCredentials: true});
+        if (res.status != 200) throw `Logout failure - ${res.status}`;
+      
+        dispatch({ type: CLEAR_PROFILE });
+        dispatch({ type: LOGOUT });
+    } catch (err) {
+        dispatch(setAlert('Logout failure', 'danger'));
+        dispatch({ type: LOGOUT_FAIL });
+    }
 };

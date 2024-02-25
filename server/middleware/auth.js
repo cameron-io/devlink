@@ -5,14 +5,14 @@ module.exports = function (req, res, next) {
   const cookies = req.headers.cookie;
   if (!cookies) return res.status(401).json({ msg: 'No cookies provided.' });
 
-  const token_cookie = cookies.split('; ').filter((e) => e.match('access_token=') != null);
+  const token_cookie = cookies.split('; ').filter((e) => e.match('token=') != null);
 
   // Check if no token
   if (token_cookie.length == 0) {
     return res.status(401).json({ msg: 'No token, authorization denied.' });
   }
 
-  const token = token_cookie[0].split('access_token=')[1];
+  const token = token_cookie[0].split('token=')[1];
 
   // Verify token
   try {

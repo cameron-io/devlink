@@ -68,6 +68,9 @@ router.post(
         { expiresIn: 360000 },
         (err, token) => {
           if (err) throw err;
+          res.setHeader("set-cookie", [
+            `token=${token}; Path=/; HttpOnly; SameSite=strict;`
+          ]);
           res.json({ token });
         }
       );
@@ -76,6 +79,21 @@ router.post(
       res.status(500).send('Server error');
     }
   }
+);
+
+// set cookie MaxAge:   -1,
+
+// @route    POST api/auth/logout
+// @desc     Logout user & invalidate token
+// @access   Public
+router.post(
+    '/logout',
+    auth,
+    (_req, res) => {
+        res.setHeader("set-cookie", [
+            `token=null; Path=/; HttpOnly; MaxAge=-1; SameSite=strict;`
+          ]).status(200).send();
+    }
 );
 
 module.exports = router;
