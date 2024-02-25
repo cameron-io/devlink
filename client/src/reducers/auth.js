@@ -31,7 +31,6 @@ const auth = (state = initialState, action) => {
     case LOGIN_SUCCESS:
       return {
         ...state,
-        ...payload,
         isAuthenticated: true,
         loading: false,
       };

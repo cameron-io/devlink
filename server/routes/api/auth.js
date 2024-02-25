@@ -70,8 +70,7 @@ router.post(
           if (err) throw err;
           res.setHeader("set-cookie", [
             `token=${token}; Path=/; HttpOnly; SameSite=strict;`
-          ]);
-          res.json({ token });
+          ]).status(200).send();
         }
       );
     } catch (err) {
