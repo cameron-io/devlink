@@ -101,6 +101,12 @@ export const createProfile = (formData, navigate, edit = false) => async (
       headers: { 'Content-Type': 'application/json' },
     };
 
+    var { skills } = formData;
+
+    if (skills) {
+        formData.skills = skills.split(',').map((skill) => skill.trim());
+    }
+
     const res = axios.post('/api/profile', formData, config);
     dispatch({
         type: GET_PROFILE,
