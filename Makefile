@@ -1,7 +1,7 @@
 SHELL = /bin/bash
 
-DOCKER_MONGODB=sudo docker exec -it mongodb mongosh -u $(DATABASE_ROOT_USER) -p $(DATABASE_ROOT_PASS) --authenticationDatabase admin
-DOCKER_MONGODB_USER=sudo docker exec -it mongodb mongosh -u $(DATABASE_USER) -p $(DATABASE_PASS) --authenticationDatabase $(DATABASE_NAME)
+DOCKER_MONGODB=docker exec -it mongodb mongosh -u $(DATABASE_ROOT_USER) -p $(DATABASE_ROOT_PASS) --authenticationDatabase admin
+DOCKER_MONGODB_USER=docker exec -it mongodb mongosh -u $(DATABASE_USER) -p $(DATABASE_PASS) --authenticationDatabase $(DATABASE_NAME)
 
 .PHONY: help
 ## help: shows this help message
@@ -13,7 +13,7 @@ help:
 ## setup-db: sets up MongoDB
 setup-db:
 	@ echo "Setting up MongoDB..."
-	@ sudo docker-compose up -d mongodb
+	@ docker-compose up -d mongodb
 	@ until $(DOCKER_MONGODB) --eval 'db.getUsers()' >/dev/null 2>&1 && exit 0; do \
 	  >&2 echo "MongoDB not ready, sleeping for 5 secs..."; \
 	  sleep 5 ; \
@@ -28,7 +28,7 @@ mongodb-shell:
 .PHONY: cleanup
 ## cleanup: removes MongoDB and associated volumes
 cleanup:
-	@ sudo docker-compose down
-	@ for vol in $(sudo docker volume ls -q); do \
-		sudo docker volume rm $(vol); \
+	@ docker-compose down
+	@ for vol in $(docker volume ls -q); do \
+		docker volume rm $(vol); \
 	done

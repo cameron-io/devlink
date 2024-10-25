@@ -5,9 +5,9 @@
 //   roles: [{ role: "readWrite", db: "admin" }]
 // });
 
-db = db.getSiblingDB('linkdev');
+db = db.getSiblingDB('linkdev')
 db.createUser({
     user: process.env.DATABASE_USER,
     pwd: process.env.DATABASE_PASS,
-    roles: [{ role: 'dbOwner', db: 'linkdev' }]
-});
+    roles: [{ role: 'dbOwner', db: 'linkdev' }],
+})
