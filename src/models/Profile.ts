@@ -110,4 +110,14 @@ const ProfileSchema = new mongoose.Schema({
     },
 })
 
+// Duplicate the ID field.
+ProfileSchema.virtual('id').get(function () {
+    return this._id.toHexString()
+})
+
+// Ensure virtual fields are serialised.
+ProfileSchema.set('toJSON', {
+    virtuals: true,
+})
+
 export default mongoose.model('profile', ProfileSchema)
