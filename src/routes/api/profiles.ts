@@ -1,6 +1,6 @@
 import express, { Router } from 'express'
 import axios from 'axios'
-import { check, validationResult } from 'express-validator'
+import { validationResult } from 'express-validator'
 import auth from '../../middleware/auth'
 import User from '../../models/User'
 import Profile from '../../models/Profile'
