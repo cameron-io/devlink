@@ -20,4 +20,14 @@ const UserSchema = new mongoose.Schema({
     },
 })
 
+// Duplicate the ID field.
+UserSchema.virtual('id').get(function () {
+    return this._id.toHexString()
+})
+
+// Ensure virtual fields are serialised.
+UserSchema.set('toJSON', {
+    virtuals: true,
+})
+
 export default mongoose.model('user', UserSchema)
