@@ -4,9 +4,9 @@ import express from 'express'
 import cors from 'cors'
 import cookieParser from 'cookie-parser'
 
-import accountsRouter from './routes/api/accounts'
-import profilesRouter from './routes/api/profiles'
-import postsRouter from './routes/api/posts'
+import accountsRouter from './routes/accounts'
+import profilesRouter from './routes/profiles'
+import postsRouter from './routes/posts'
 
 import { connectDB } from './config/db'
 

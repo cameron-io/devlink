@@ -2,8 +2,8 @@ import express, { Router } from 'express'
 import bcrypt from 'bcryptjs'
 import jwt from 'jsonwebtoken'
 import { check, validationResult } from 'express-validator'
-import User from '../../models/User'
-import auth from '../../middleware/auth'
+import User from '../models/User'
+import auth from '../middleware/auth'
 
 const accountsRouter: Router = express.Router()
 
