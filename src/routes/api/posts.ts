@@ -1,52 +1,46 @@
-const { json } = require('express')
-const express = require('express')
-const router = express.Router()
-const { check, validationResult } = require('express-validator')
-const auth = require('../../middleware/auth')
+import express, { Router } from 'express'
+import { validationResult } from 'express-validator'
+import auth from '../../middleware/auth'
+import Post from '../../models/Post'
+import User from '../../models/User'
 
-const Post = require('../../models/Post')
-const Profile = require('../../models/Profile')
-const User = require('../../models/User')
+const postsRouter: Router = express.Router()
 
 // @route    POST api/posts
 // @desc     Create a post
 // @access   Private
-router.post(
-    '/',
-    [auth, [check('text', 'text is required').not().isEmpty()]],
-    async (req, res) => {
-        const errors = validationResult(req)
-        if (!errors.isEmpty()) {
-            return res.status(400).json({ errors: errors.array() })
-        }
-
-        try {
-            const user = await User.findById(req.user.id).select('-password')
-
-            const newPost = new Post({
-                text: req.body.text,
-                name: user.name,
-                user: req.user.id,
-            })
-
-            const post = await newPost.save()
-
-            res.json(post)
-        } catch (err) {
-            console.error(err.message)
-            res.status(500).send('Server error')
-        }
+postsRouter.post('/', auth, async (req: any, res: any) => {
+    const errors = validationResult(req)
+    if (!errors.isEmpty()) {
+        return res.status(400).json({ errors: errors.array() })
     }
-)
+
+    try {
+        const user: any = await User.findById(req.user.id).select('-password')
+
+        const newPost = new Post({
+            text: req.body.text,
+            name: user.name,
+            user: req.user.id,
+        })
+
+        const post = await newPost.save()
+
+        res.json(post)
+    } catch (err: any) {
+        console.error(err.message)
+        res.status(500).send('Server error')
+    }
+})
 
 // @route    GET api/posts
 // @desc     Get all posts
 // @access   Private
-router.get('/', auth, async (req, res) => {
+postsRouter.get('/', auth, async (req: any, res: any) => {
     try {
         const posts = await Post.find().sort({ date: -1 })
         res.json(posts)
-    } catch (err) {
+    } catch (err: any) {
         console.error(err.message)
         res.status(500).send('Server error')
     }
@@ -55,7 +49,7 @@ router.get('/', auth, async (req, res) => {
 // @route    GET api/posts/:id
 // @desc     Get post by ID
 // @access   Private
-router.get('/:id', auth, async (req, res) => {
+postsRouter.get('/:id', auth, async (req: any, res: any) => {
     try {
         const post = await Post.findById(req.params.id)
 
@@ -64,7 +58,7 @@ router.get('/:id', auth, async (req, res) => {
         }
 
         res.json(post)
-    } catch (err) {
+    } catch (err: any) {
         console.error(err.message)
         if (err.kind === 'ObjectId') {
             return res.status(404).json({ msg: 'Post not found' })
@@ -76,9 +70,9 @@ router.get('/:id', auth, async (req, res) => {
 // @route    DELETE api/posts/:id
 // @desc     Delete a post
 // @access   Private
-router.delete('/:id', auth, async (req, res) => {
+postsRouter.delete('/:id', auth, async (req: any, res: any) => {
     try {
-        const post = await Post.findById(req.params.id)
+        const post: any = await Post.findById(req.params.id)
 
         if (!post) {
             return res.status(404).json({ msg: 'Post not found' })
@@ -92,7 +86,7 @@ router.delete('/:id', auth, async (req, res) => {
         await post.remove()
 
         res.json({ msg: 'Post deleted' })
-    } catch (err) {
+    } catch (err: any) {
         console.error(err.message)
         if (err.kind === 'ObjectId') {
             return res.status(404).json({ msg: 'Post not found' })
@@ -104,13 +98,14 @@ router.delete('/:id', auth, async (req, res) => {
 // @route    PUT api/posts/like/:id
 // @desc     Like a post
 // @access   Private
-router.put('/like/:id', auth, async (req, res) => {
+postsRouter.put('/like/:id', auth, async (req: any, res: any) => {
     try {
-        const post = await Post.findById(req.params.id)
+        const post: any = await Post.findById(req.params.id)
 
         // Check if post is already liked
         if (
-            post.likes.filter((like) => like.user.toString() === req.user.id).length > 0
+            post.likes.filter((like: any) => like.user.toString() === req.user.id)
+                .length > 0
         ) {
             return res.json({ msg: 'Post already liked' })
         }
@@ -120,7 +115,7 @@ router.put('/like/:id', auth, async (req, res) => {
         await post.save()
 
         res.json(post.likes)
-    } catch (err) {
+    } catch (err: any) {
         console.error(err.message)
         res.status(500).send('Server error')
     }
@@ -129,20 +124,21 @@ router.put('/like/:id', auth, async (req, res) => {
 // @route    PUT api/posts/unlike/:id
 // @desc     Unlike a post
 // @access   Private
-router.put('/unlike/:id', auth, async (req, res) => {
+postsRouter.put('/unlike/:id', auth, async (req: any, res: any) => {
     try {
-        const post = await Post.findById(req.params.id)
+        const post: any = await Post.findById(req.params.id)
 
         // Check if post is already liked
         if (
-            post.likes.filter((like) => like.user.toString() === req.user.id).length === 0
+            post.likes.filter((like: any) => like.user.toString() === req.user.id)
+                .length === 0
         ) {
             return res.json({ msg: 'Post has not yet been liked' })
         }
 
         // Get remove index
         const removeIndex = post.likes
-            .map((like) => like.user.toString())
+            .map((like: any) => like.user.toString())
             .indexOf(req.user.id)
 
         post.likes.splice(removeIndex, 1)
@@ -150,7 +146,7 @@ router.put('/unlike/:id', auth, async (req, res) => {
         await post.save()
 
         res.json(post.likes)
-    } catch (err) {
+    } catch (err: any) {
         console.error(err.message)
         res.status(500).send('Server error')
     }
@@ -159,47 +155,43 @@ router.put('/unlike/:id', auth, async (req, res) => {
 // @route    POST api/posts/comment/:id
 // @desc     Comment on a post
 // @access   Private
-router.post(
-    '/comment/:id',
-    [auth, [check('text', 'text is required').not().isEmpty()]],
-    async (req, res) => {
-        const errors = validationResult(req)
-        if (!errors.isEmpty()) {
-            return res.status(400).json({ errors: errors.array() })
-        }
-
-        try {
-            const user = await User.findById(req.user.id).select('-password')
-            const post = await Post.findById(req.params.id)
-
-            const newComment = {
-                text: req.body.text,
-                name: user.name,
-                user: req.user.id,
-            }
-
-            post.comments.unshift(newComment)
-
-            await post.save()
-
-            res.json(post.comments)
-        } catch (err) {
-            console.error(err.message)
-            res.status(500).send('Server error')
-        }
+postsRouter.post('/comment/:id', auth, async (req: any, res: any) => {
+    const errors = validationResult(req)
+    if (!errors.isEmpty()) {
+        return res.status(400).json({ errors: errors.array() })
     }
-)
+
+    try {
+        const user: any = await User.findById(req.user.id).select('-password')
+        const post: any = await Post.findById(req.params.id)
+
+        const newComment = {
+            text: req.body.text,
+            name: user.name,
+            user: req.user.id,
+        }
+
+        post.comments.unshift(newComment)
+
+        await post.save()
+
+        res.json(post.comments)
+    } catch (err: any) {
+        console.error(err.message)
+        res.status(500).send('Server error')
+    }
+})
 
 // @route    POST api/posts/comment/:id/:comment_id
 // @desc     Delete a comment
 // @access   Private
-router.delete('/comment/:id/:comment_id', auth, async (req, res) => {
+postsRouter.delete('/comment/:id/:comment_id', auth, async (req: any, res: any) => {
     try {
-        const post = await Post.findById(req.params.id)
+        const post: any = await Post.findById(req.params.id)
 
         // Pull out comments
-        const comment = post.comments.find(
-            (comment) => comment.id === req.params.comment_id
+        const comment: any = post.comments.find(
+            (comment: any) => comment.id === req.params.comment_id
         )
 
         // Make sure comment exists
@@ -214,7 +206,7 @@ router.delete('/comment/:id/:comment_id', auth, async (req, res) => {
 
         // Get remove index
         const removeIndex = post.comments
-            .map((comment) => comment.user.toString())
+            .map((comment: any) => comment.user.toString())
             .indexOf(req.user.id)
 
         post.comments.splice(removeIndex, 1)
@@ -222,10 +214,10 @@ router.delete('/comment/:id/:comment_id', auth, async (req, res) => {
         await post.save()
 
         res.json(post.comments)
-    } catch (err) {
+    } catch (err: any) {
         console.error(err.message)
         res.status(500).send('Server error')
     }
 })
 
-module.exports = router
+export default postsRouter

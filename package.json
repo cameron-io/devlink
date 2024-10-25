@@ -3,10 +3,11 @@
   "version": "1.0.0",
   "private": true,
   "description": "Developer Network",
-  "main": "server/app.js",
+  "main": "src/index.js",
   "scripts": {
-    "start": "node server/app",
-    "server": "nodemon server/app"
+    "start": "node dist/index.js",
+    "build": "tsc",
+    "server": "nodemon dist/index.js"
   },
   "author": "Cameron Gallichan",
   "license": "MIT",
@@ -22,6 +23,13 @@
     "mongoose": "^8.7.2"
   },
   "devDependencies": {
-    "nodemon": "^3.1.7"
+    "@types/bcryptjs": "^2.4.6",
+    "@types/cookie-parser": "^1.4.7",
+    "@types/cors": "^2.8.17",
+    "@types/express": "^5.0.0",
+    "@types/jsonwebtoken": "^9.0.7",
+    "@types/node": "^22.8.0",
+    "nodemon": "^3.1.7",
+    "typescript": "^5.6.3"
   }
 }

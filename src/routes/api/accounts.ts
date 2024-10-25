@@ -1,20 +1,20 @@
-const express = require('express')
-const router = express.Router()
-const bcrypt = require('bcryptjs')
-const auth = require('../../middleware/auth')
-const jwt = require('jsonwebtoken')
-const { check, validationResult } = require('express-validator')
+import express, { Router } from 'express'
+import bcrypt from 'bcryptjs'
+import jwt from 'jsonwebtoken'
+import { check, validationResult } from 'express-validator'
+import User from '../../models/User'
+import auth from '../../middleware/auth'
 
-const User = require('../../models/User')
+const accountsRouter: Router = express.Router()
 
 // @route    GET api/accounts/info
 // @desc     Get Authenticated User Info
 // @access   Public
-router.get('/info', auth, async (req, res) => {
+accountsRouter.get('/info', auth, async (req: any, res: any) => {
     try {
         const user = await User.findById(req.user.id).select('-password')
         res.json(user)
-    } catch (err) {
+    } catch (err: any) {
         console.error(err.message)
         res.status(500).send('Server Error')
     }
@@ -23,7 +23,7 @@ router.get('/info', auth, async (req, res) => {
 // @route    POST api/accounts/register
 // @desc     Register user
 // @access   Public
-router.post(
+accountsRouter.post(
     '/register',
     [
         check('name', 'Name is required').not().isEmpty(),
@@ -32,7 +32,7 @@ router.post(
             min: 6,
         }),
     ],
-    async (req, res) => {
+    async (req: any, res: any) => {
         const errors = validationResult(req)
         if (!errors.isEmpty()) {
             return res.status(400).json({ errors: errors.array() })
@@ -70,6 +70,10 @@ router.post(
                 },
             }
 
+            if (!process.env.JWT_SECRET) {
+                throw 'Environment malformed.'
+            }
+
             jwt.sign(
                 payload,
                 process.env.JWT_SECRET,
@@ -79,7 +83,7 @@ router.post(
                     res.json({ token })
                 }
             )
-        } catch (err) {
+        } catch (err: any) {
             console.error(err.message)
             res.status(500).send('Server error')
         }
@@ -89,13 +93,13 @@ router.post(
 // @route    POST api/accounts/login
 // @desc     Authenticate user & get token
 // @access   Public
-router.post(
+accountsRouter.post(
     '/login',
     [
         check('email', 'Please include a valid email address').isEmail(),
         check('password', 'Password is required').exists(),
     ],
-    async (req, res) => {
+    async (req: any, res: any) => {
         const errors = validationResult(req)
         if (!errors.isEmpty()) {
             return res.status(400).json({ errors: errors.array() })
@@ -124,6 +128,10 @@ router.post(
                 },
             }
 
+            if (!process.env.JWT_SECRET) {
+                throw 'Environment malformed.'
+            }
+
             jwt.sign(
                 payload,
                 process.env.JWT_SECRET,
@@ -137,7 +145,7 @@ router.post(
                         .send()
                 }
             )
-        } catch (err) {
+        } catch (err: any) {
             console.error(err.message)
             res.status(500).send('Server error')
         }
@@ -149,7 +157,7 @@ router.post(
 // @route    POST api/auth/logout
 // @desc     Logout user & invalidate token
 // @access   Public
-router.post('/logout', auth, (_req, res) => {
+accountsRouter.post('/logout', auth, (_req: any, res: any) => {
     res.setHeader('set-cookie', [
         `token=null; Path=/; HttpOnly; MaxAge=-1; SameSite=strict;`,
     ])
@@ -157,4 +165,4 @@ router.post('/logout', auth, (_req, res) => {
         .send()
 })
 
-module.exports = router
+export default accountsRouter
