@@ -2,6 +2,7 @@ import express, { Router } from 'express'
 import bcrypt from 'bcryptjs'
 import jwt from 'jsonwebtoken'
 import { check, validationResult } from 'express-validator'
+import gravatar from 'gravatar'
 import User from '../models/User'
 import auth from '../middleware/auth'
 import Post from '../models/Post'
@@ -50,11 +51,14 @@ accountsRouter.post(
                 return res.status(400).json({ error: [{ msg: 'User already exists' }] })
             }
 
+            const avatar = gravatar.url(email, { s: '200', r: 'pg', d: 'mm' })
+
             // Create instance of user (not saved)
             user = new User({
                 name,
                 email,
                 password,
+                avatar,
             })
 
             // Encrypt password

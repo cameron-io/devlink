@@ -2,9 +2,7 @@ import express, { Router } from 'express'
 import axios from 'axios'
 import { validationResult } from 'express-validator'
 import auth from '../middleware/auth'
-import User from '../models/User'
 import Profile from '../models/Profile'
-import Post from '../models/Post'
 
 const profilesRouter: Router = express.Router()
 
@@ -15,7 +13,7 @@ profilesRouter.get('/me', auth, async (req: any, res: any) => {
     try {
         const profile = await Profile.findOne({
             user: req.user.id,
-        }).populate('user', ['name'])
+        }).populate('user', ['name', 'avatar'])
 
         if (!profile) {
             return res.status(400).json({ msg: 'Profile not found for this user' })
@@ -107,7 +105,7 @@ profilesRouter.post('/', auth, async (req: any, res: any) => {
 // @access   Public
 profilesRouter.get('/', async (req: any, res: any) => {
     try {
-        const profiles = await Profile.find().populate('user', ['name'])
+        const profiles = await Profile.find().populate('user', ['name', 'avatar'])
         res.json(profiles)
     } catch (err: any) {
         console.error(err.message)
@@ -122,7 +120,7 @@ profilesRouter.get('/user/:user_id', async (req: any, res: any) => {
     try {
         const profile = await Profile.findOne({
             user: req.params.user_id,
-        }).populate('user', ['name'])
+        }).populate('user', ['name', 'avatar'])
 
         if (!profile) return res.status(400).json({ msg: 'Profile not found.' })
 
