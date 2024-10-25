@@ -4,6 +4,8 @@ import jwt from 'jsonwebtoken'
 import { check, validationResult } from 'express-validator'
 import User from '../models/User'
 import auth from '../middleware/auth'
+import Post from '../models/Post'
+import Profile from '../models/Profile'
 
 const accountsRouter: Router = express.Router()
 
@@ -163,6 +165,38 @@ accountsRouter.post('/logout', auth, (_req: any, res: any) => {
     ])
         .status(200)
         .send()
+})
+
+// @route    GET api/accounts/info
+// @desc     Get Authenticated User Info
+// @access   Public
+accountsRouter.get('/info', auth, async (req: any, res: any) => {
+    try {
+        const user = await User.findById(req.user.id).select('-password')
+        res.json(user)
+    } catch (err: any) {
+        console.error(err.message)
+        res.status(500).send('Server Error')
+    }
+})
+
+// @route    DELETE api/accounts
+// @desc     Delete profile, user & posts
+// @access   Private
+accountsRouter.delete('/', auth, async (req: any, res: any) => {
+    try {
+        // Remove user posts
+        await Post.deleteMany({ user: req.user.id })
+        // Remove profile
+        await Profile.findOneAndDelete({ user: req.user.id })
+        // Remove user
+        await User.findOneAndDelete({ _id: req.user.id })
+
+        res.json({ msg: 'User deleted' })
+    } catch (err: any) {
+        console.error(err.message)
+        res.status(500).send('Server Error')
+    }
 })
 
 export default accountsRouter

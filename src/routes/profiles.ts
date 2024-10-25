@@ -1,10 +1,10 @@
 import express, { Router } from 'express'
 import axios from 'axios'
 import { validationResult } from 'express-validator'
-import auth from '../../middleware/auth'
-import User from '../../models/User'
-import Profile from '../../models/Profile'
-import Post from '../../models/Post'
+import auth from '../middleware/auth'
+import User from '../models/User'
+import Profile from '../models/Profile'
+import Post from '../models/Post'
 
 const profilesRouter: Router = express.Router()
 
@@ -132,25 +132,6 @@ profilesRouter.get('/user/:user_id', async (req: any, res: any) => {
         if (err.kind == 'ObjectId') {
             return res.status(400).json({ msg: 'Profile not found.' })
         }
-        res.status(500).send('Server Error')
-    }
-})
-
-// @route    DELETE api/profiles
-// @desc     Delete profile, user & posts
-// @access   Private
-profilesRouter.delete('/', auth, async (req: any, res: any) => {
-    try {
-        // Remove user posts
-        await Post.deleteMany({ user: req.user.id })
-        // Remove profile
-        await Profile.findOneAndDelete({ user: req.user.id })
-        // Remove user
-        await User.findOneAndDelete({ _id: req.user.id })
-
-        res.json({ msg: 'User deleted' })
-    } catch (err: any) {
-        console.error(err.message)
         res.status(500).send('Server Error')
     }
 })

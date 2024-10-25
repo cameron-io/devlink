@@ -1,8 +1,8 @@
 import express, { Router } from 'express'
 import { validationResult } from 'express-validator'
-import auth from '../../middleware/auth'
-import Post from '../../models/Post'
-import User from '../../models/User'
+import auth from '../middleware/auth'
+import Post from '../models/Post'
+import User from '../models/User'
 
 const postsRouter: Router = express.Router()
 
