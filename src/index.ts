@@ -4,14 +4,13 @@ import express from 'express'
 import cors from 'cors'
 import cookieParser from 'cookie-parser'
 
-import accountsRouter from './routes/accounts'
-import profilesRouter from './routes/profiles'
-import postsRouter from './routes/posts'
+import accountsRouter from './api/accounts'
+import profilesRouter from './api/profiles'
+import postsRouter from './api/posts'
 
 import { connectDB } from './config/db'
 
 const app = express()
-app.use(cookieParser())
 
 // Connect database
 connectDB()
@@ -20,11 +19,12 @@ connectDB()
 app.use(express.json())
 app.use(
     cors({
-        origin: 'http://' + process.env.CLIENT_HOST + ':' + process.env.CLIENT_PORT,
+        origin: '*',
         credentials: true,
         methods: ['GET', 'PUT', 'POST', 'DELETE'],
     })
 )
+app.use(cookieParser())
 
 // Define routes
 app.use('/api/accounts', accountsRouter)
