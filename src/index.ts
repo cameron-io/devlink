@@ -8,7 +8,7 @@ import accountsRouter from './api/accounts'
 import profilesRouter from './api/profiles'
 import postsRouter from './api/posts'
 
-import { connectDB } from './config/db'
+import connectDB from './config/db'
 
 const app = express()
 
