@@ -37,40 +37,25 @@ profilesRouter.post('/', auth, async (req: any, res: any) => {
         })
     }
 
-    // Pull from body
-    const {
-        company,
-        location,
-        website,
-        bio,
-        skills,
-        status,
-        githubusername,
-        youtube,
-        twitter,
-        instagram,
-        linkedin,
-        facebook,
-    } = req.body
-
     // Initialize profile object
-    const profileFields: any = {}
+    var profileFields: any = {}
+    profileFields = Object.fromEntries(
+        Object.entries(req.body).map(([key, value]) => [
+            key,
+            value !== undefined ? value : (profileFields as any)[key]
+        ])
+    )
     profileFields.user = req.user.id
-    if (company) profileFields.company = company
-    if (website) profileFields.website = website
-    if (location) profileFields.location = location
-    if (bio) profileFields.bio = bio
-    if (status) profileFields.status = status
-    if (githubusername) profileFields.githubusername = githubusername
-    if (skills) profileFields.skills = skills
+
 
     // Initialize social object
     profileFields.social = {}
-    if (youtube) profileFields.social.youtube = youtube
-    if (twitter) profileFields.social.twitter = twitter
-    if (facebook) profileFields.social.facebook = facebook
-    if (linkedin) profileFields.social.linkedin = linkedin
-    if (instagram) profileFields.social.instagram = instagram
+    Object.fromEntries(
+        Object.entries(req.body).map(([key, value]) => [
+            key,
+            value !== undefined ? value : (profileFields.social as any)[key]
+        ])
+    )
 
     try {
         // Look for user profile
