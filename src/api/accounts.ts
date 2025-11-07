@@ -1,4 +1,4 @@
-import express, { Router } from 'express'
+import express, { Router, Response, Request } from 'express'
 import bcrypt from 'bcryptjs'
 import jwt from 'jsonwebtoken'
 import { check, validationResult } from 'express-validator'
@@ -10,12 +10,24 @@ import Profile from '../models/Profile'
 
 const accountsRouter: Router = express.Router()
 
+const setLoginCookie = (res: Response, token: string) => {
+    return res.setHeader('set-cookie', [
+        `token=${token}; Path=/; HttpOnly; SameSite=strict;`,
+    ])
+}
+
+const setLogoutCookie = (res: Response) => {
+    return res.setHeader('set-cookie', [
+        'token=null; Path=/; HttpOnly; MaxAge=-1; SameSite=strict;',
+    ])
+}
+
 // @route    GET api/accounts/info
 // @desc     Get Authenticated User Info
 // @access   Public
-accountsRouter.get('/info', auth, async (req: any, res: any) => {
+accountsRouter.get('/info', auth, async (req: Request, res: Response) => {
     try {
-        const user = await User.findById(req.user.id).select('-password')
+        const user = await User.findById(req.user?.id).select('-password')
         res.json(user)
     } catch (err: any) {
         console.error(err.message)
@@ -35,7 +47,7 @@ accountsRouter.post(
             min: 6,
         }),
     ],
-    async (req: any, res: any) => {
+    async (req: Request, res: any) => {
         const errors = validationResult(req)
         if (!errors.isEmpty()) {
             return res.status(400).json({ errors: errors.array() })
@@ -105,7 +117,7 @@ accountsRouter.post(
         check('email', 'Please include a valid email address').isEmail(),
         check('password', 'Password is required').exists(),
     ],
-    async (req: any, res: any) => {
+    async (req: Request, res: any) => {
         const errors = validationResult(req)
         if (!errors.isEmpty()) {
             return res.status(400).json({ errors: errors.array() })
@@ -144,9 +156,8 @@ accountsRouter.post(
                 { expiresIn: 360000 },
                 (err, token) => {
                     if (err) throw err
-                    res.setHeader('set-cookie', [
-                        `token=${token}; Path=/; HttpOnly; SameSite=strict;`,
-                    ])
+                    if (token == undefined) throw 'token creation failure'
+                    setLoginCookie(res, token)
                         .status(200)
                         .send()
                 }
@@ -163,10 +174,8 @@ accountsRouter.post(
 // @route    POST api/auth/logout
 // @desc     Logout user & invalidate token
 // @access   Public
-accountsRouter.post('/logout', auth, (_req: any, res: any) => {
-    res.setHeader('set-cookie', [
-        `token=null; Path=/; HttpOnly; MaxAge=-1; SameSite=strict;`,
-    ])
+accountsRouter.post('/logout', auth, (_req: Request, res: Response) => {
+    setLogoutCookie(res)
         .status(200)
         .send()
 })
@@ -174,9 +183,9 @@ accountsRouter.post('/logout', auth, (_req: any, res: any) => {
 // @route    GET api/accounts/info
 // @desc     Get Authenticated User Info
 // @access   Public
-accountsRouter.get('/info', auth, async (req: any, res: any) => {
+accountsRouter.get('/info', auth, async (req: Request, res: Response) => {
     try {
-        const user = await User.findById(req.user.id).select('-password')
+        const user = await User.findById(req.user?.id).select('-password')
         res.json(user)
     } catch (err: any) {
         console.error(err.message)
@@ -187,16 +196,18 @@ accountsRouter.get('/info', auth, async (req: any, res: any) => {
 // @route    DELETE api/accounts
 // @desc     Delete profile, user & posts
 // @access   Private
-accountsRouter.delete('/', auth, async (req: any, res: any) => {
+accountsRouter.delete('/', auth, async (req: Request, res: Response) => {
     try {
         // Remove user posts
-        await Post.deleteMany({ user: req.user.id })
+        await Post.deleteMany({ user: req.user?.id })
         // Remove profile
-        await Profile.findOneAndDelete({ user: req.user.id })
+        await Profile.findOneAndDelete({ user: req.user?.id })
         // Remove user
-        await User.findOneAndDelete({ _id: req.user.id })
+        await User.findOneAndDelete({ _id: req.user?.id })
 
-        res.json({ msg: 'User deleted' })
+        setLogoutCookie(res)
+            .status(200)
+            .send()
     } catch (err: any) {
         console.error(err.message)
         res.status(500).send('Server Error')

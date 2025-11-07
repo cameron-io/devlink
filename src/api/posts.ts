@@ -1,4 +1,4 @@
-import express, { Router } from 'express'
+import express, { Router, Request, Response } from 'express'
 import { validationResult } from 'express-validator'
 import auth from '../middleware/auth'
 import Post from '../models/Post'
@@ -9,19 +9,19 @@ const postsRouter: Router = express.Router()
 // @route    POST api/posts
 // @desc     Create a post
 // @access   Private
-postsRouter.post('/', auth, async (req: any, res: any) => {
+postsRouter.post('/', auth, async (req: Request, res: any) => {
     const errors = validationResult(req)
     if (!errors.isEmpty()) {
         return res.status(400).json({ errors: errors.array() })
     }
 
     try {
-        const user: any = await User.findById(req.user.id).select('-password')
+        const user: any = await User.findById(req.user?.id).select('-password')
 
         const newPost = new Post({
             text: req.body.text,
             name: user.name,
-            user: req.user.id,
+            user: req.user?.id,
         })
 
         const post = await newPost.save()
@@ -36,7 +36,7 @@ postsRouter.post('/', auth, async (req: any, res: any) => {
 // @route    GET api/posts
 // @desc     Get all posts
 // @access   Private
-postsRouter.get('/', auth, async (req: any, res: any) => {
+postsRouter.get('/', auth, async (req: Request, res: Response) => {
     try {
         const posts = await Post.find().sort({ date: -1 })
         res.json(posts)
@@ -49,7 +49,7 @@ postsRouter.get('/', auth, async (req: any, res: any) => {
 // @route    GET api/posts/:id
 // @desc     Get post by ID
 // @access   Private
-postsRouter.get('/:id', auth, async (req: any, res: any) => {
+postsRouter.get('/:id', auth, async (req: Request, res: any) => {
     try {
         const post = await Post.findById(req.params.id)
 
@@ -70,7 +70,7 @@ postsRouter.get('/:id', auth, async (req: any, res: any) => {
 // @route    DELETE api/posts/:id
 // @desc     Delete a post
 // @access   Private
-postsRouter.delete('/:id', auth, async (req: any, res: any) => {
+postsRouter.delete('/:id', auth, async (req: Request, res: any) => {
     try {
         const post: any = await Post.findById(req.params.id)
 
@@ -79,7 +79,7 @@ postsRouter.delete('/:id', auth, async (req: any, res: any) => {
         }
 
         // Check user
-        if (post.user.toString() !== req.user.id) {
+        if (post.user.toString() !== req.user?.id) {
             return res.status(401).json({ msg: 'User not authorized' })
         }
 
@@ -98,19 +98,19 @@ postsRouter.delete('/:id', auth, async (req: any, res: any) => {
 // @route    PUT api/posts/like/:id
 // @desc     Like a post
 // @access   Private
-postsRouter.put('/like/:id', auth, async (req: any, res: any) => {
+postsRouter.put('/like/:id', auth, async (req: Request, res: any) => {
     try {
         const post: any = await Post.findById(req.params.id)
 
         // Check if post is already liked
         if (
-            post.likes.filter((like: any) => like.user.toString() === req.user.id)
+            post.likes.filter((like: any) => like.user.toString() === req.user?.id)
                 .length > 0
         ) {
             return res.json({ msg: 'Post already liked' })
         }
 
-        post.likes.unshift({ user: req.user.id })
+        post.likes.unshift({ user: req.user?.id })
 
         await post.save()
 
@@ -124,13 +124,13 @@ postsRouter.put('/like/:id', auth, async (req: any, res: any) => {
 // @route    PUT api/posts/unlike/:id
 // @desc     Unlike a post
 // @access   Private
-postsRouter.put('/unlike/:id', auth, async (req: any, res: any) => {
+postsRouter.put('/unlike/:id', auth, async (req: Request, res: any) => {
     try {
         const post: any = await Post.findById(req.params.id)
 
         // Check if post is already liked
         if (
-            post.likes.filter((like: any) => like.user.toString() === req.user.id)
+            post.likes.filter((like: any) => like.user.toString() === req.user?.id)
                 .length === 0
         ) {
             return res.json({ msg: 'Post has not yet been liked' })
@@ -139,7 +139,7 @@ postsRouter.put('/unlike/:id', auth, async (req: any, res: any) => {
         // Get remove index
         const removeIndex = post.likes
             .map((like: any) => like.user.toString())
-            .indexOf(req.user.id)
+            .indexOf(req.user?.id)
 
         post.likes.splice(removeIndex, 1)
 
@@ -155,20 +155,20 @@ postsRouter.put('/unlike/:id', auth, async (req: any, res: any) => {
 // @route    POST api/posts/comment/:id
 // @desc     Comment on a post
 // @access   Private
-postsRouter.post('/comment/:id', auth, async (req: any, res: any) => {
+postsRouter.post('/comment/:id', auth, async (req: Request, res: any) => {
     const errors = validationResult(req)
     if (!errors.isEmpty()) {
         return res.status(400).json({ errors: errors.array() })
     }
 
     try {
-        const user: any = await User.findById(req.user.id).select('-password')
+        const user: any = await User.findById(req.user?.id).select('-password')
         const post: any = await Post.findById(req.params.id)
 
         const newComment = {
             text: req.body.text,
             name: user.name,
-            user: req.user.id,
+            user: req.user?.id,
         }
 
         post.comments.unshift(newComment)
@@ -185,7 +185,7 @@ postsRouter.post('/comment/:id', auth, async (req: any, res: any) => {
 // @route    POST api/posts/comment/:id/:comment_id
 // @desc     Delete a comment
 // @access   Private
-postsRouter.delete('/comment/:id/:comment_id', auth, async (req: any, res: any) => {
+postsRouter.delete('/comment/:id/:comment_id', auth, async (req: Request, res: any) => {
     try {
         const post: any = await Post.findById(req.params.id)
 
@@ -200,14 +200,14 @@ postsRouter.delete('/comment/:id/:comment_id', auth, async (req: any, res: any) 
         }
 
         // Check user
-        if (comment.user.toString() !== req.user.id) {
+        if (comment.user.toString() !== req.user?.id) {
             return res.status(404).json({ msg: 'User not authorized' })
         }
 
         // Get remove index
         const removeIndex = post.comments
             .map((comment: any) => comment.user.toString())
-            .indexOf(req.user.id)
+            .indexOf(req.user?.id)
 
         post.comments.splice(removeIndex, 1)
 

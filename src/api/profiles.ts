@@ -1,4 +1,4 @@
-import express, { Router } from 'express'
+import express, { Router, Request, Response } from 'express'
 import axios from 'axios'
 import { validationResult } from 'express-validator'
 import auth from '../middleware/auth'
@@ -9,10 +9,10 @@ const profilesRouter: Router = express.Router()
 // @route    GET api/profiles/me
 // @desc     Get current user profile
 // @access   Private
-profilesRouter.get('/me', auth, async (req: any, res: any) => {
+profilesRouter.get('/me', auth, async (req: Request, res: any) => {
     try {
         const profile = await Profile.findOne({
-            user: req.user.id,
+            user: req.user?.id,
         }).populate('user', ['name', 'avatar'])
 
         if (!profile) {
@@ -29,7 +29,7 @@ profilesRouter.get('/me', auth, async (req: any, res: any) => {
 // @route    POST api/profiles
 // @desc     Create or update user profile
 // @access   Private
-profilesRouter.post('/', auth, async (req: any, res: any) => {
+profilesRouter.post('/', auth, async (req: Request, res: any) => {
     const errors = validationResult(req)
     if (!errors.isEmpty()) {
         return res.status(400).json({
@@ -45,7 +45,7 @@ profilesRouter.post('/', auth, async (req: any, res: any) => {
             value !== undefined ? value : (profileFields as any)[key]
         ])
     )
-    profileFields.user = req.user.id
+    profileFields.user = req.user?.id
 
 
     // Initialize social object
@@ -59,12 +59,12 @@ profilesRouter.post('/', auth, async (req: any, res: any) => {
 
     try {
         // Look for user profile
-        let profile: any = await Profile.findOne({ user: req.user.id })
+        let profile: any = await Profile.findOne({ user: req.user?.id })
 
         if (profile) {
             // Update
             profile = await Profile.findOneAndUpdate(
-                { user: req.user.id },
+                { user: req.user?.id },
                 { $set: profileFields },
                 { new: true }
             )
@@ -88,7 +88,7 @@ profilesRouter.post('/', auth, async (req: any, res: any) => {
 // @route    GET api/profiles
 // @desc     Get all profiles
 // @access   Public
-profilesRouter.get('/', async (req: any, res: any) => {
+profilesRouter.get('/', async (req: Request, res: any) => {
     try {
         const profiles = await Profile.find().populate('user', ['name', 'avatar'])
         res.json(profiles)
@@ -101,7 +101,7 @@ profilesRouter.get('/', async (req: any, res: any) => {
 // @route    GET api/profiles/user/:user_id
 // @desc     Get profile by user ID
 // @access   Public
-profilesRouter.get('/user/:user_id', async (req: any, res: any) => {
+profilesRouter.get('/user/:user_id', async (req: Request, res: any) => {
     try {
         const profile = await Profile.findOne({
             user: req.params.user_id,
@@ -122,7 +122,7 @@ profilesRouter.get('/user/:user_id', async (req: any, res: any) => {
 // @route    PUT api/profiles/experience
 // @desc     Add profile experience
 // @access   Private
-profilesRouter.put('/experience', auth, async (req: any, res: any) => {
+profilesRouter.put('/experience', auth, async (req: Request, res: any) => {
     const errors = validationResult(req)
     if (!errors.isEmpty()) {
         return res.status(400).json({ errors: errors.array() })
@@ -141,7 +141,7 @@ profilesRouter.put('/experience', auth, async (req: any, res: any) => {
     }
 
     try {
-        const profile: any = await Profile.findOne({ user: req.user.id })
+        const profile: any = await Profile.findOne({ user: req.user?.id })
 
         profile.experience.unshift(newExp)
 
@@ -157,9 +157,9 @@ profilesRouter.put('/experience', auth, async (req: any, res: any) => {
 // @route    DELETE api/profiles/experience/:exp_id
 // @desc     Delete experience from profile
 // @access   Private
-profilesRouter.delete('/experience/:exp_id', auth, async (req: any, res: any) => {
+profilesRouter.delete('/experience/:exp_id', auth, async (req: Request, res: any) => {
     try {
-        const profile: any = await Profile.findOne({ user: req.user.id })
+        const profile: any = await Profile.findOne({ user: req.user?.id })
 
         // Get remove index
         const removeIndex = profile.experience
@@ -180,7 +180,7 @@ profilesRouter.delete('/experience/:exp_id', auth, async (req: any, res: any) =>
 // @route    PUT api/profiles/education
 // @desc     Add profile education
 // @access   Private
-profilesRouter.put('/education', auth, async (req: any, res: any) => {
+profilesRouter.put('/education', auth, async (req: Request, res: any) => {
     const errors = validationResult(req)
     if (!errors.isEmpty()) {
         return res.status(400).json({ errors: errors.array() })
@@ -200,7 +200,7 @@ profilesRouter.put('/education', auth, async (req: any, res: any) => {
     }
 
     try {
-        const profile: any = await Profile.findOne({ user: req.user.id })
+        const profile: any = await Profile.findOne({ user: req.user?.id })
 
         profile.education.unshift(newEdu)
 
@@ -216,9 +216,9 @@ profilesRouter.put('/education', auth, async (req: any, res: any) => {
 // @route    DELETE api/profiles/education/:edu_id
 // @desc     Delete education from profile
 // @access   Private
-profilesRouter.delete('/education/:edu_id', auth, async (req: any, res: any) => {
+profilesRouter.delete('/education/:edu_id', auth, async (req: Request, res: any) => {
     try {
-        const profile: any = await Profile.findOne({ user: req.user.id })
+        const profile: any = await Profile.findOne({ user: req.user?.id })
 
         // Get remove index
         const removeIndex = profile.education
@@ -239,7 +239,7 @@ profilesRouter.delete('/education/:edu_id', auth, async (req: any, res: any) => 
 // @route    GET api/profiles/github/:username
 // @desc     Get user repos from GitHub
 // @access   Public
-profilesRouter.get('/github/:username', (req: any, res: any) => {
+profilesRouter.get('/github/:username', async (req: Request, res: any) => {
     try {
         const options: any = {
             uri: `https://api.github.com/users/${req.params.username}/repos?per_page=5&sort=created:asc&client_id=${process.env.GITHUB_CLIENT_ID}&client_secret=${process.env.GITHUB_CLIENT_SECRET}`,
@@ -247,7 +247,7 @@ profilesRouter.get('/github/:username', (req: any, res: any) => {
             headers: { 'user-agent': 'node.js' },
         }
 
-        const response: any = axios.get(options)
+        const response: any = await axios.get(options)
         if (response.statusCode !== 200) {
             return res.status(404).json({ msg: 'No GitHub profile found.' })
         }

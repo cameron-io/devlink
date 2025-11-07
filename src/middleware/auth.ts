@@ -1,6 +1,7 @@
+import { Request } from 'express'
 import jwt from 'jsonwebtoken'
 
-export default function (req: any, res: any, next: any) {
+export default function (req: Request, res: any, next: any) {
     // Get token from header
     const cookies = req.cookies
     if (!cookies) return res.status(401).json({ msg: 'No cookies provided.' })
