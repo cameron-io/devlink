@@ -19,7 +19,7 @@ connectDB()
 app.use(express.json())
 app.use(
     cors({
-        origin: '*',
+        origin: ['http://' + process.env.CLIENT_HOST],
         credentials: true,
         methods: ['GET', 'PUT', 'POST', 'DELETE'],
     })
