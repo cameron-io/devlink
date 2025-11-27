@@ -7,7 +7,7 @@
     "scripts": {
         "start": "tsc dist/index.js",
         "build": "tsc",
-        "dev": "tsc && nodemon dist/index.js",
+        "dev": "source ~/.github_oauth/env && tsc && nodemon dist/index.js",
         "env": "docker compose up -d db "
     },
     "author": "Cameron Gallichan",

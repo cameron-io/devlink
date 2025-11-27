@@ -1,5 +1,5 @@
 import express, { Router, Request } from 'express'
-import axios from 'axios'
+import axios, { AxiosResponse } from 'axios'
 import { validationResult } from 'express-validator'
 import auth from '../middleware/auth'
 import Profile from '../models/Profile'
@@ -240,22 +240,47 @@ profilesRouter.delete('/education/:edu_id', auth, async (req: Request, res: any)
 // @desc     Get user repos from GitHub
 // @access   Public
 profilesRouter.get('/github/:username', async (req: Request, res: any) => {
-    try {
-        const options: any = {
-            uri: `https://api.github.com/users/${req.params.username}/repos?per_page=5&sort=created:asc&client_id=${process.env.GITHUB_CLIENT_ID}&client_secret=${process.env.GITHUB_CLIENT_SECRET}`,
-            method: 'GET',
-            headers: { 'user-agent': 'node.js' },
-        }
+  try {
+    const { username } = req.params;
 
-        const response: any = await axios.get(options)
-        if (response.statusCode !== 200) {
-            return res.status(404).json({ msg: 'No GitHub profile found.' })
-        }
-        res.json(JSON.parse(response.body))
-    } catch (err: any) {
-        console.error(err.message)
-        res.status(500).send('Server Error')
+    if (!username) {
+      return res.status(400).json({ msg: "Username is required" });
     }
+
+    // Optional but recommended error guarding
+    if (!process.env.GITHUB_CLIENT_ID || !process.env.GITHUB_CLIENT_SECRET) {
+      console.warn("⚠️ GitHub OAuth credentials missing, using unauthenticated rate limits");
+    }
+
+    const url = `https://api.github.com/users/${username}/repos`;
+    
+    const response = await axios.get(url, {
+      headers: {
+        "User-Agent": "node.js",
+        "Accept": "application/vnd.github+json",
+        "Authorization": `token ${process.env.GITHUB_TOKEN}`
+      },
+      params: {
+        per_page: 5,
+        sort: "created",
+        direction: "asc",
+        client_id: process.env.GITHUB_CLIENT_ID,
+        client_secret: process.env.GITHUB_CLIENT_SECRET
+      }
+    });
+
+    return res.json(response.data);
+
+  } catch (err: any) {
+    console.error("GitHub API Error:", err.message);
+
+    // GitHub returns structured errors — forward them when possible
+    if (err.response) {
+      return res.status(err.response.status).json(err.response.data);
+    }
+
+    return res.status(500).json({ msg: "Server error" });
+  }
 })
 
 export default profilesRouter
