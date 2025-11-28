@@ -1,7 +1,7 @@
 SHELL = /bin/bash
 
-DOCKER_MONGODB=docker exec -it mongodb mongosh -u $(DATABASE_ROOT_USER) -p $(DATABASE_ROOT_PASS) --authenticationDatabase admin
-DOCKER_MONGODB_USER=docker exec -it mongodb mongosh -u $(DATABASE_USER) -p $(DATABASE_PASS) --authenticationDatabase $(DATABASE_NAME)
+DOCKER_MONGODB=docker exec -it mongodb mongosh -u $(DB_ROOT_USER) -p $(DB_ROOT_PASS) --authenticationDatabase admin
+DOCKER_MONGODB_USER=docker exec -it mongodb mongosh -u $(DB_USER) -p $(DB_PASS) --authenticationDatabase $(DB_NAME)
 
 .PHONY: help
 ## help: shows this help message

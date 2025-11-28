@@ -3,17 +3,25 @@ require('dotenv').config()
 import express from 'express'
 import cors from 'cors'
 import cookieParser from 'cookie-parser'
+import mongoose from 'mongoose'
 
+import db from './config/db'
 import accountsRouter from './api/accounts'
 import profilesRouter from './api/profiles'
 import postsRouter from './api/posts'
 
-import connectDB from './config/db'
+// Connect database
+(async () => {
+    try {
+        await mongoose.connect(db)
+        console.log('MongoDB connected')
+    } catch (err: any) {
+        console.error(err.message)
+        process.exit(1)
+    }
+})()
 
 const app = express()
-
-// Connect database
-connectDB()
 
 // Init middleware
 app.use(express.json())

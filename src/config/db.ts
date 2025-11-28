@@ -1,26 +1,7 @@
-import mongoose from 'mongoose'
 
-const connectDB = async () => {
-    try {
-        await mongoose.connect(
-            'mongodb://' +
-                process.env.DATABASE_USER +
-                ':' +
-                process.env.DATABASE_PASS +
-                '@' +
-                process.env.DATABASE_HOST +
-                ':' +
-                process.env.DATABASE_PORT +
-                '/' +
-                process.env.DATABASE_NAME
-        )
+let e = process.env
 
-        console.log('MongoDB connected')
-    } catch (err: any) {
-        console.error(err.message)
-        // Exit process with failure
-        process.exit(1)
-    }
-}
+const uri =
+    `mongodb://${e.DB_USER}:${e.DB_PASS}@${e.DB_HOST}:${e.DB_PORT}/${e.DB_NAME}`
 
-export default connectDB
+export default uri
