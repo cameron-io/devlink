@@ -3,10 +3,10 @@ import bcrypt from 'bcryptjs'
 import jwt from 'jsonwebtoken'
 import { check, validationResult } from 'express-validator'
 import gravatar from 'gravatar'
-import User from '../models/User'
 import auth from '../middleware/auth'
-import Post from '../models/Post'
-import Profile from '../models/Profile'
+import User from '../models/user'
+import Post from '../models/post'
+import Profile from '../models/profile'
 
 const accountsRouter: Router = express.Router()
 
@@ -126,7 +126,7 @@ accountsRouter.post(
         const { email, password } = req.body
 
         try {
-            let user = await User.findOne({ email })
+            let user: any = await User.findOne({ email })
 
             // See if no user exists
             if (!user) {

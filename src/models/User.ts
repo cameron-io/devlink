@@ -1,6 +1,7 @@
-import mongoose from 'mongoose'
+import mongoose, { HydratedDocument, SchemaDefinition } from 'mongoose'
+import { User } from 'devlink-types'
 
-const UserSchema = new mongoose.Schema({
+const UserDefinition: SchemaDefinition<User> = {
     name: {
         type: String,
         required: true,
@@ -21,7 +22,9 @@ const UserSchema = new mongoose.Schema({
         type: Date,
         default: Date.now,
     },
-})
+}
+
+const UserSchema = new mongoose.Schema(UserDefinition);
 
 // Duplicate the ID field.
 UserSchema.virtual('id').get(function () {
@@ -32,5 +35,7 @@ UserSchema.virtual('id').get(function () {
 UserSchema.set('toJSON', {
     virtuals: true,
 })
+
+export type UserDocument = HydratedDocument<User>
 
 export default mongoose.model('user', UserSchema)

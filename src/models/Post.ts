@@ -1,10 +1,10 @@
-import mongoose from 'mongoose'
+import mongoose, { SchemaDefinition } from 'mongoose'
+import { Post } from 'devlink-types'
+import { HydratedDocument } from 'mongoose';
 
-const Schema = mongoose.Schema
-
-const PostSchema = new Schema({
+const PostDefinition: SchemaDefinition<Post> = {
     user: {
-        type: Schema.Types.ObjectId,
+        type: mongoose.Schema.Types.ObjectId,
         ref: 'users',
     },
     text: {
@@ -17,7 +17,7 @@ const PostSchema = new Schema({
     likes: [
         {
             user: {
-                type: Schema.Types.ObjectId,
+                type: mongoose.Schema.Types.ObjectId,
                 ref: 'users',
             },
         },
@@ -25,7 +25,7 @@ const PostSchema = new Schema({
     comments: [
         {
             user: {
-                type: Schema.Types.ObjectId,
+                type: mongoose.Schema.Types.ObjectId,
                 ref: 'users',
             },
             text: {
@@ -45,7 +45,10 @@ const PostSchema = new Schema({
         type: Date,
         default: Date.now,
     },
-})
+}
+
+const PostSchema = new mongoose.Schema(PostDefinition);
+
 
 // Duplicate the ID field.
 PostSchema.virtual('id').get(function () {
@@ -56,5 +59,7 @@ PostSchema.virtual('id').get(function () {
 PostSchema.set('toJSON', {
     virtuals: true,
 })
+
+export type PostDocument = HydratedDocument<Post>
 
 export default mongoose.model('post', PostSchema)

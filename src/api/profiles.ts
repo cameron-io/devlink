@@ -1,8 +1,8 @@
 import express, { Router, Request } from 'express'
-import axios, { AxiosResponse } from 'axios'
+import axios from 'axios'
 import { validationResult } from 'express-validator'
 import auth from '../middleware/auth'
-import Profile from '../models/Profile'
+import Profile from '../models/profile'
 
 const profilesRouter: Router = express.Router()
 

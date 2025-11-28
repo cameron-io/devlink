@@ -1,6 +1,8 @@
-import mongoose from 'mongoose'
+import mongoose, { SchemaDefinition } from 'mongoose'
+import { Profile } from 'devlink-types'
+import { HydratedDocument } from 'mongoose';
 
-const ProfileSchema = new mongoose.Schema({
+const ProfileDefinition: SchemaDefinition<Profile> = {
     user: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'user',
@@ -108,7 +110,9 @@ const ProfileSchema = new mongoose.Schema({
         type: Date,
         default: Date.now,
     },
-})
+}
+
+const ProfileSchema = new mongoose.Schema(ProfileDefinition);
 
 // Duplicate the ID field.
 ProfileSchema.virtual('id').get(function () {
@@ -119,5 +123,7 @@ ProfileSchema.virtual('id').get(function () {
 ProfileSchema.set('toJSON', {
     virtuals: true,
 })
+
+export type ProfileDocument = HydratedDocument<Profile>
 
 export default mongoose.model('profile', ProfileSchema)
