@@ -10,7 +10,12 @@ import accountsRouter from './api/accounts'
 import profilesRouter from './api/profiles'
 import postsRouter from './api/posts'
 
-// Connect database
+// Environment Variables
+const clientHost: string = process.env.CLIENT_HOST!
+const serverHost: string = process.env.SERVER_HOST!
+const serverPort: number = parseInt(process.env.SERVER_PORT!);
+
+// Connect Database
 (async () => {
     try {
         await mongoose.connect(db)
@@ -23,28 +28,26 @@ import postsRouter from './api/posts'
 
 const app = express()
 
-// Init middleware
+// Init Middleware
 app.use(express.json())
 app.use(
     cors({
-        origin: ['http://' + process.env.CLIENT_HOST],
+        origin: [`http://${clientHost}`],
         credentials: true,
         methods: ['GET', 'PUT', 'POST', 'DELETE'],
     })
 )
 app.use(cookieParser())
 
-// Define routes
+// Define Routes
 app.use('/api/accounts', accountsRouter)
 app.use('/api/profiles', profilesRouter)
 app.use('/api/posts', postsRouter)
 
-const PORT = process.env.SERVER_PORT || 5000
-
-var listener = app.listen(PORT, () => {
+var listener = app.listen(serverPort, serverHost, () => {
     const addr: any = listener.address()
     if (addr == null) {
         throw 'Unexpected failure during listen'
     }
-    console.log('Server listening on port ' + addr.port)
+    console.log(`Server listening on: ${addr.address}:${addr.port}`)
 })
