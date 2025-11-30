@@ -27,8 +27,7 @@ const setLogoutCookie = (res: Response) => {
 // @access   Public
 accountsRouter.get('/info', auth, async (req: Request, res: Response) => {
     try {
-        const user = await User.findById(req.user?.id).select('-password')
-        res.json(user)
+        res.json(req.user)
     } catch (err: any) {
         console.error(err.message)
         res.status(500).send('Server Error')
@@ -185,8 +184,7 @@ accountsRouter.post('/logout', auth, (_req: Request, res: Response) => {
 // @access   Public
 accountsRouter.get('/info', auth, async (req: Request, res: Response) => {
     try {
-        const user = await User.findById(req.user?.id).select('-password')
-        res.json(user)
+        res.json(req.user)
     } catch (err: any) {
         console.error(err.message)
         res.status(500).send('Server Error')

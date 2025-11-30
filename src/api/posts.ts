@@ -2,7 +2,6 @@ import express, { Router, Request, Response } from 'express'
 import { validationResult } from 'express-validator'
 import auth from '../middleware/auth'
 import Post from '../models/post'
-import User from '../models/user'
 
 const postsRouter: Router = express.Router()
 
@@ -16,12 +15,10 @@ postsRouter.post('/', auth, async (req: Request, res: any) => {
     }
 
     try {
-        const user: any = await User.findById(req.user?.id).select('-password')
-
         const newPost = new Post({
             text: req.body.text,
-            name: user.name,
-            user: req.user?.id,
+            name: req.user!.name,
+            user: req.user!.id,
         })
 
         const post = await newPost.save()
@@ -162,13 +159,12 @@ postsRouter.post('/comment/:id', auth, async (req: Request, res: any) => {
     }
 
     try {
-        const user: any = await User.findById(req.user?.id).select('-password')
         const post: any = await Post.findById(req.params.id)
 
         const newComment = {
             text: req.body.text,
-            name: user.name,
-            user: req.user?.id,
+            name: req.user!.name,
+            user: req.user!.id,
         }
 
         post.comments.unshift(newComment)

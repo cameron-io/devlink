@@ -1,7 +1,8 @@
 import { Request } from 'express'
 import jwt from 'jsonwebtoken'
+import User from '../models/user'
 
-export default function (req: Request, res: any, next: any) {
+export default async function (req: Request, res: any, next: any) {
     // Get token from header
     const cookies = req.cookies
     if (!cookies) return res.status(401).json({ msg: 'No cookies provided.' })
@@ -21,7 +22,7 @@ export default function (req: Request, res: any, next: any) {
     try {
         const decoded: any = jwt.verify(token, process.env.JWT_SECRET)
 
-        req.user = decoded.user
+        req.user = await User.findById(decoded.user.id).select('-password')
         next()
     } catch (err) {
         res.status(401).json({ msg: 'Invalid token.', err: err })
