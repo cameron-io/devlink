@@ -1,7 +1,7 @@
 import express, { Router, Request, Response } from 'express'
 import { validationResult } from 'express-validator'
 import auth from '../middleware/auth'
-import Post from '../models/post'
+import Post from '../models/Post'
 
 const postsRouter: Router = express.Router()
 

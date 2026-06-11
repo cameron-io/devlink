@@ -2,7 +2,7 @@ import express, { Router, Request } from 'express'
 import axios from 'axios'
 import { validationResult } from 'express-validator'
 import auth from '../middleware/auth'
-import Profile from '../models/profile'
+import Profile from '../models/Profile'
 
 const profilesRouter: Router = express.Router()
 

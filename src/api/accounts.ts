@@ -4,9 +4,9 @@ import jwt from 'jsonwebtoken'
 import { check, validationResult } from 'express-validator'
 import gravatar from 'gravatar'
 import auth from '../middleware/auth'
-import User from '../models/user'
-import Post from '../models/post'
-import Profile from '../models/profile'
+import User from '../models/User'
+import Post from '../models/Post'
+import Profile from '../models/Profile'
 
 const accountsRouter: Router = express.Router()
 

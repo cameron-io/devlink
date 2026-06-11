@@ -1,6 +1,6 @@
 import { Request } from 'express'
 import jwt from 'jsonwebtoken'
-import User from '../models/user'
+import User from '../models/User'
 
 export default async function (req: Request, res: any, next: any) {
     // Get token from header
